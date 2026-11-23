@@ -50,9 +50,13 @@ service cloud.firestore {
     //       At most 120 entries. Joined keys ≤ 4000 chars, joined values ≤ 16000.
     //       Each value is capped in the client at 1500 chars (rules cannot loop).
     //       Keys are non-empty and contain none of . ~ * / [ ] `
-    // Signed-in users may read every latestAnswers doc, same as attempts, so a
-    // future teacher tool can list the collection. There is no teacher claim yet,
-    // so any signed-in account can read every student's latest script.
+    // Read: the owner may read their own document. A verified teacher
+    // (request.auth.token.email == 't44@wbss.edu.hk' and email_verified == true)
+    // may read any document and list the collection. Other signed-in accounts
+    // cannot read another user's script; a student list query must include
+    // uid == request.auth.uid or the whole query is denied. The leaderboard
+    // does not use this collection. Firebase Console (IAM) is not governed
+    // by these rules.
     // A user may create or update only the document whose id is their uid + '_' + quizId.
     // Delete is denied. The next finish overwrites the snapshot. A leaderboard
     // delete does not remove it. Rewriting another student's score is not granted
@@ -92,6 +96,21 @@ service cloud.firestore {
 
     function isSignedIn() {
       return request.auth != null;
+    }
+
+    // Token email only. Clients cannot self-assign this by writing a document field.
+    function isVerifiedTeacher() {
+      return isSignedIn()
+        && request.auth.token.email == 't44@wbss.edu.hk'
+        && request.auth.token.email_verified == true;
+    }
+
+    function canReadLatestAnswers() {
+      return isSignedIn()
+        && (
+          resource.data.uid == request.auth.uid
+          || isVerifiedTeacher()
+        );
     }
 
     function attemptData() {
@@ -267,7 +286,7 @@ service cloud.firestore {
     }
 
     match /latestAnswers/{answerId} {
-      allow read: if isSignedIn();
+      allow read: if canReadLatestAnswers();
 
       allow create: if isSignedIn()
         && isValidLatestAnswer()

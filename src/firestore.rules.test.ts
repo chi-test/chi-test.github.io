@@ -46,15 +46,30 @@ describe('firestore attempt rules', () => {
     expect(rules).not.toMatch(/match \/aiGradeLogs\/\{logId\} \{[^}]*allow (read|update|delete)/);
   });
 
-  it('lets any signed-in user read latestAnswers and only the owner write their own doc', () => {
-    const block = rules.slice(rules.indexOf('match /latestAnswers/{answerId}'));
+  it('keeps attempts readable by any signed-in user for the leaderboard, with no answer text', () => {
+    const block = rules.slice(rules.indexOf('match /attempts/{attemptId}'));
     const nextMatch = block.indexOf('\n    match ');
     const body = nextMatch === -1 ? block : block.slice(0, nextMatch);
     expect(body).toContain('allow read: if isSignedIn();');
+    expect(rules).toContain('attempts stores no answer text');
+  });
+
+  it('restricts latestAnswers reads to the owner or the verified teacher, and only the owner may write their own doc', () => {
+    const block = rules.slice(rules.indexOf('match /latestAnswers/{answerId}'));
+    const nextMatch = block.indexOf('\n    match ');
+    const body = nextMatch === -1 ? block : block.slice(0, nextMatch);
+    expect(body).toContain('allow read: if canReadLatestAnswers();');
+    expect(body).not.toContain('allow read: if isSignedIn();');
+    expect(rules).toContain("request.auth.token.email == 't44@wbss.edu.hk'");
+    expect(rules).toContain('request.auth.token.email_verified == true');
+    expect(rules).toContain('resource.data.uid == request.auth.uid');
+    expect(rules).toContain('function isVerifiedTeacher()');
+    expect(rules).toContain('function canReadLatestAnswers()');
     expect(body).toContain('isValidLatestAnswer()');
     expect(body).toContain("answerId == request.auth.uid + '_' + latestData().quizId");
     expect(body).toContain('latestData().uid == resource.data.uid');
     expect(body).toContain('latestData().quizId == resource.data.quizId');
+    expect(body).toContain('resource.data.uid == request.auth.uid');
     expect(body).not.toContain('allow delete');
     const valid = rules.slice(rules.indexOf('function isValidLatestAnswer()'));
     const validBody = valid.slice(0, valid.indexOf('match /latestAnswers/'));
