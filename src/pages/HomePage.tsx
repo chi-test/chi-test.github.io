@@ -12,7 +12,7 @@ import { getQuiz } from '../data/quizzes.ts';
  */
 const levels: readonly { level: string; ids: readonly string[] }[] = [
   { level: '中四', ids: ['lianpo', 'lianpo-longq-1', 'lianpo-longq-2', 'lianpo-longq-3'] },
-  { level: '中五', ids: ['8passages', 'eight-longq-1'] },
+  { level: '中五', ids: ['8passages', 'eight-longq-1', 'shide-xishan'] },
 ];
 
 export function HomePage() {

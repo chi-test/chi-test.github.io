@@ -13,7 +13,7 @@ export const LATEST_ANSWERS = 'latestAnswers';
 export const MAX_LATEST_ANSWER_ENTRIES = 120;
 export const MAX_ANSWER_KEY_CHARS = 80;
 export const MAX_ANSWER_VALUE_CHARS = 1500;
-export const MAX_LATEST_ANSWERS_TEXT_CHARS = 12_000;
+export const MAX_LATEST_ANSWERS_TEXT_CHARS = 16_000;
 export const MAX_LATEST_ANSWER_KEYS_TEXT_CHARS = 4_000;
 
 /** `QuizPage` gloss input `maxLength`. */

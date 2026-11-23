@@ -16,11 +16,14 @@ describe('firestore attempt rules', () => {
     expect(rules).toContain("attemptData().quizId == 'lianpo-longq-2'");
     expect(rules).toContain("attemptData().quizId == 'lianpo-longq-3'");
     expect(rules).toContain("attemptData().quizId == 'eight-longq-1'");
+    expect(rules).toContain("attemptData().quizId == 'shide-xishan'");
     expect(rules).toContain('? 30');
+    expect(rules).toContain('? 50');
     expect(rules).toContain("'lianpo-longq-1'");
     expect(rules).toContain("'lianpo-longq-2'");
     expect(rules).toContain("'lianpo-longq-3'");
     expect(rules).toContain("'eight-longq-1'");
+    expect(rules).toContain("'shide-xishan'");
     expect(rules).not.toContain('66');
   });
 
@@ -62,7 +65,7 @@ describe('firestore attempt rules', () => {
     expect(rules).toContain(`latestData().answers.keys().join('').size() <= ${MAX_LATEST_ANSWER_KEYS_TEXT_CHARS}`);
     expect(rules).toContain(`latestData().answers.values().join('').size() <= ${MAX_LATEST_ANSWERS_TEXT_CHARS}`);
     expect(rules).toContain('latestData().uid == request.auth.uid');
-    expect(rules).toContain("latestData().quizId in ['lianpo', '8passages', 'lianpo-longq-1', 'lianpo-longq-2', 'lianpo-longq-3', 'eight-longq-1']");
+    expect(rules).toContain("latestData().quizId in ['lianpo', '8passages', 'lianpo-longq-1', 'lianpo-longq-2', 'lianpo-longq-3', 'eight-longq-1', 'shide-xishan']");
   });
 
   it('lets a signed-in user create their own questionFlags and nothing else', () => {

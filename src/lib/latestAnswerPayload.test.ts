@@ -179,6 +179,7 @@ describe('latest answer payload', () => {
       'lianpo-longq-2',
       'lianpo-longq-3',
       'eight-longq-1',
+      'shide-xishan',
     ]);
     for (const paper of longQuizzes) {
       const blank = longPaperAnswers(paper, { stray: '不應寫入' });
@@ -202,7 +203,7 @@ describe('latest answer payload', () => {
           displayName: '學生',
           quizId: paper.id,
           score: 0,
-          total: 30,
+          total: paper.totalMax,
           durationMs: 1000,
           answers: full,
         }),
