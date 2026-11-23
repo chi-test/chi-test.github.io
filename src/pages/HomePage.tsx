@@ -11,8 +11,8 @@ import { getQuiz } from '../data/quizzes.ts';
  * A future level (for example 中六) is one more entry in this list.
  */
 const levels: readonly { level: string; ids: readonly string[] }[] = [
-  { level: '中四', ids: ['lianpo', 'lianpo-longq-1', 'lianpo-longq-2', 'lianpo-longq-3'] },
-  { level: '中五', ids: ['8passages', 'eight-longq-1', 'shide-xishan'] },
+  { level: '中四', ids: ['lianpo', 'lianpo-longq-1', 'lianpo-longq-2', 'lianpo-longq-3', 'shide-xishan'] },
+  { level: '中五', ids: ['8passages', 'eight-longq-1'] },
 ];
 
 export function HomePage() {
